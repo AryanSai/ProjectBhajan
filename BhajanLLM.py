@@ -36,9 +36,13 @@ cypher_chain = GraphCypherQAChain.from_llm(
     verbose=True
 )
 
-# cypher_chain.invoke({"query": "Find all persons who work at OpenAI"})
-cypher_chain.invoke({"query": "Find a Ganesha bhajan with the word 'Amba' in it."})
-# print("Answer: ", result)
+def ask_question(query):
+    # Pass the query argument to the cypher_chain
+    result = cypher_chain.invoke({"query": query})
+    return result
+
+ask_question("give a bhajan dedicated to ganesha.")
+
 
 # cypher
 # MATCH (p:Person)-[r:WORKS_AT]->(o:Organization) WHERE o.name = "OpenAI" RETURN p;
