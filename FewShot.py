@@ -24,16 +24,35 @@ The database schema includes nodes and relationships structured as follows:
 Node properties:
 -Deity [name: STRING]
 -Bhajan [text: STRING]
--Meaning [text: STRING]
+-Meaning [text: STRING
 
-The relationships properties:
+Relationship properties:
+
+The relationships:
 (:Bhajan)-[:HAS_MEANING]->(:Meaning)
 (:Bhajan)-[:DEDICATED_TO]->(:Deity)
 
-Please convert the user's question into an optimized Cypher query
+Please convert the user's question into an optimized Cypher query.
 
-Schema: {schema}
-Question: {question}
+For example:
+- User Question: "Find all bhajans dedicated to Ganesha."
+  Cypher Query: MATCH (b:Bhajan)-[:DEDICATED_TO]->(d:Deity {name: 'Ganesha'}) RETURN b.text AS Bhajan, d.name AS Deity;
+
+- User Question: "Give me a random Ganesha bhajan."
+  Cypher Query: MATCH (b:Bhajan)-[:DEDICATED_TO]->(d:Deity {name: 'Ganesha'}) RETURN b.text AS Bhajan ORDER BY rand() LIMIT 1;
+
+- User Question: "Display all ganesha bajanas."
+  Cypher Query: MATCH (b:Bhajan)-[:DEDICATED_TO]->(d:Deity {name: 'Ganesha'}) RETURN b.text AS Bhajan, d.name AS Deity;
+
+- User Question: "Find bhajans with the word 'Parvati' in the text, diplay the name of the deity also."
+  Cypher Query: MATCH (b:Bhajan)-[:DEDICATED_TO]->(d:Deity) WHERE b.text CONTAINS 'Parvati' RETURN b.text AS Bhajan, d.name AS Deity;
+
+- User Question: "Find a Ganesha bhajan with the word 'Amba' in the text."
+  Cypher Query: MATCH (b:Bhajan)-[:DEDICATED_TO]->(d:Deity {name: 'Ganesha'}) WHERE b.text CONTAINS 'Amba' RETURN b.text AS Bhajan, d.name AS Deity;
+
+  Schema: {schema}
+  Question: {question}
+
 """
 
 cypher_generation_prompt = PromptTemplate(
@@ -49,15 +68,13 @@ cypher_chain = GraphCypherQAChain.from_llm(
     validate_cypher=True,
 )
 
-def ask_question(query):
-    graph.refresh_schema()
-    print(graph.schema)
-    
-    # Pass the query argument to the cypher_chain
-    result = cypher_chain.invoke({"query": query})
-    return result
+cypher_chain.invoke({"query": "give a krishna bhajan."})
 
-ask_question("give a bhajan dedicated to Ganesha.")
+# def ask_question(query):
+#     result = cypher_chain.invoke({"query": query})
+#     return result
+  
+# ask_question("give a krishna bhajan.")
 
 
 # cypher
