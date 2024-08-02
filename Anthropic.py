@@ -1,6 +1,4 @@
-import os
 
-os.environ["ANTHROPIC_API_KEY"] = "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"
 
 from langchain_anthropic import AnthropicLLM
 from langchain_core.prompts import PromptTemplate
