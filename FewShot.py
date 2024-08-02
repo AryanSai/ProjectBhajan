@@ -50,6 +50,12 @@ For example:
 - User Question: "Find a Ganesha bhajan with the word 'Amba' in the text."
   Cypher Query: MATCH (b:Bhajan)-[:DEDICATED_TO]->(d:Deity {name: 'Ganesha'}) WHERE b.text CONTAINS 'Amba' RETURN b.text AS Bhajan, d.name AS Deity;
 
+- User Question: "Find all bhajans with the word 'Radha' in the text, and display the meaning of each one."
+  Cypher Query: MATCH (b:Bhajan)-[:HAS_MEANING]->(m:Meaning) WHERE b.text CONTAINS 'Radha' RETURN b.text AS Bhajan, m.text AS Meaning;
+  
+- User Question: "Give me five bhajans dedicated to Krishna."
+  Cypher Query: MATCH (b:Bhajan)-[:DEDICATED_TO]->(d:Deity {name: 'Krishna'}) RETURN b.text AS Bhajan LIMIT 5;
+  
   Schema: {schema}
   Question: {question}
 
