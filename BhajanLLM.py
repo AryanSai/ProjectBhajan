@@ -4,7 +4,7 @@ from langchain.chains import GraphCypherQAChain
 from langchain.prompts import PromptTemplate
 
 llm = LlamaCpp(
-    model_path="/home/aryan/Desktop/Models/Meta-Llama-3.1-8B-Instruct-Q8_0.gguf",
+    model_path="/home/aryan/Desktop/Aryan/Models/codegemma-7b-Q8_0.gguf",
     # n_gpu_layers=-1, # For GPU acceleration
     # seed=1337, # For reproducibility
     # n_ctx=2048, # Adjust context window if necessary
@@ -23,16 +23,14 @@ The database schema includes nodes and relationships structured as follows:
 
 Node properties:
 -Deity [name: STRING]
--Bhajan [text: STRING]
--Meaning [text: STRING]
+-Bhajan [text: STRING, meaning: STRING]
 
 The relationships properties:
-(:Bhajan)-[:HAS_MEANING]->(:Meaning)
 (:Bhajan)-[:DEDICATED_TO]->(:Deity)
 
 Please convert the user's question into an optimized Cypher query
 
-Take care of the syntax. You are adding an extra flower bracket in your replies.
+Take care of the syntax, you are adding extra braces. Just give the Query and you should not provide explaination.
 
 Schema: {schema}
 Question: {question}
@@ -48,7 +46,8 @@ cypher_chain = GraphCypherQAChain.from_llm(
     graph=graph,
     cypher_prompt=cypher_generation_prompt,
     verbose=True,
-    # validate_cypher=True,
+    validate_cypher=True,
+    stop=["This ","Explanation: ","Note:","The",";"],
 )
 
 def ask_question(query):
